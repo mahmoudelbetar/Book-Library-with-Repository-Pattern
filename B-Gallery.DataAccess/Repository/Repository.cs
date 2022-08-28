@@ -36,6 +36,20 @@ namespace B_Gallery.DataAccess.Repository
             return query.ToList();
         }
 
+        public IEnumerable<T> GetAll(Expression<Func<T, bool>> filter, string? includePropertis = null)
+        {
+            IQueryable<T> query = dbSet;
+            query = query.Where(filter);
+            if (includePropertis != null)
+            {
+                foreach (var prop in includePropertis.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(prop);
+                }
+            }
+            return query.ToList();
+        }
+
         public T GetById(int id)
         {
             return dbSet.Find(id);

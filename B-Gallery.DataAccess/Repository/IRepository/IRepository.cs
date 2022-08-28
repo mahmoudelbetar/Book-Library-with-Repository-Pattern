@@ -12,6 +12,7 @@ namespace B_Gallery.DataAccess.Repository.IRepository
         // T = Category
         T GetFirstOrDefault(Expression<Func<T, bool>> filter, string? includePropertis = null);
         IEnumerable<T> GetAll(string? includePropertis = null);
+        IEnumerable<T> GetAll(Expression<Func<T, bool>> filter, string? includePropertis = null);
         void Add(T entity);
         T GetById(int id);
         void Remove(T entity);
