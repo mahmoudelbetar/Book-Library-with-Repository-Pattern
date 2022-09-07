@@ -23,5 +23,7 @@ namespace B_Gallery.Models
         [ValidateNever]
         public virtual ApplicationUser? ApplicationUser { get; set; }
 
+        
+
     }
 }

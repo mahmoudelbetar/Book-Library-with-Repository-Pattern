@@ -1,4 +1,12 @@
 ﻿@inject IHttpContextAccessor Http
+@{
+    int? count = Http.HttpContext.Session.GetInt32("ccart");
+    if(count == null){
+        count = 0;
+    }
+    
+
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -48,7 +56,7 @@
             <a class="nav-link" asp-area="Customer" asp-controller="Cart" asp-action="Index">
 
                 <i class="bi bi-cart text-white">
-                    <span class="badge rounded-pill text-primary bg-white"></span>
+                    <span class="badge rounded-pill text-primary bg-white">@count</span>
                     </i>
             </a>
           </li>

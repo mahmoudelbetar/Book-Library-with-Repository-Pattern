@@ -26,41 +26,52 @@ namespace B_Gallery.Areas.Customer.Controllers
             {
                 ListCart = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == claim.Value, includeProperties: "Product")
             };
+            var total = shoppingCartViewModel.Total;
             foreach(var item in shoppingCartViewModel.ListCart)
             {
                 item.Product.ListPrice = item.Count * item.Product.Price;
-                item.Product.Price50 = shoppingCartViewModel.ListCart.Sum(s => s.Product.ListPrice);
+                total = (decimal)shoppingCartViewModel.ListCart.Sum(s => s.Product.ListPrice);
             }
+            shoppingCartViewModel.Total = total;
+            HttpContext.Session.SetInt32("ccart", _unitOfWork.ShoppingCart.CountCart());
             return View(shoppingCartViewModel);
         }
 
-        [HttpDelete]
-        public IActionResult Delete(int id)
+        [HttpGet]
+        public IActionResult Plus(string cartId)
         {
-            var item = _unitOfWork.ShoppingCart.GetFirstOrDefault(u => u.Id == id.ToString());
-            if(item == null)
-            {
-                return NotFound();
-            }
-            _unitOfWork.ShoppingCart.Remove(item);
+            var item = _unitOfWork.ShoppingCart.GetFirstOrDefault(u => u.Id == cartId);
+            item.Count += 1;
+            _unitOfWork.ShoppingCart.Update(item);
             _unitOfWork.Save();
-            ClaimsIdentity? claimsIdentity = (ClaimsIdentity?)User.Identity;
-            Claim? claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-            ShoppingCartViewModel shoppingCartViewModel = new ShoppingCartViewModel()
-            {
-                ListCart = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == claim.Value, includeProperties: "Product")
-            };
-            
-            return View("Index", shoppingCartViewModel);
+            return RedirectToAction("Index");
         }
 
-        //[HttpGet]
-        //public IActionResult Increase(int id)
-        //{
-        //    ClaimsIdentity? claimsIdentity = (ClaimsIdentity?)User.Identity;
-        //    Claim? claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-        //    ShoppingCart shoppingCart = _unitOfWork.ShoppingCart.GetFirstOrDefault(u => u.ProductId == id);
+        [HttpGet]
+        public IActionResult Minus(string cartId)
+        {
+            var item = _unitOfWork.ShoppingCart.GetFirstOrDefault(u => u.Id == cartId);
+            if(item.Count <= 0)
+            {
+                item.Count = 0;
+            }
+            else
+            {
+                item.Count -= 1;
+            }
+            _unitOfWork.ShoppingCart.Update(item);
+            _unitOfWork.Save();
+            return RedirectToAction("Index");
+        }
 
-        //}
+        [HttpGet]
+        public IActionResult Remove(string cartId)
+        {
+            var shoppingCartItem = _unitOfWork.ShoppingCart.GetFirstOrDefault(u => u.Id == cartId);
+            _unitOfWork.ShoppingCart.Remove(shoppingCartItem);
+            _unitOfWork.Save();
+            return RedirectToAction("Index");
+        }
+
     }
 }

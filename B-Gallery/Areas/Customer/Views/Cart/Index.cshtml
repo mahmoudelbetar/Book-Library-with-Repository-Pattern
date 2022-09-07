@@ -10,7 +10,7 @@
 						Shopping Cart
 					</div>
 					<div class="col-6 text-end">
-						<a class="btn btn-outline-info btn-sm">Continue Shopping</a>
+						<a asp-area="Customer" asp-controller="Home" class="btn btn-outline-info btn-sm">Continue Shopping</a>
 					</div>
 				</div>
 			</div>
@@ -24,7 +24,7 @@
 					</div>
 					<div class="col-12 col-lg-6 pt-md-3">
 						<h5><strong>@item.Product.Title</strong></h5>
-						<p><small>@item.Product.Description</small></p>
+						<p><small>@Html.Raw(@item.Product.Description)</small></p>
 					</div>
 					<div class="col-12  col-lg-5 text-center row">
 						<div class="col-4 text-md-right pt-4">
@@ -32,17 +32,17 @@
 						</div>
 						<div class="col-6 col-sm-4 col-lg-6 pt-2">
 							<div class="w-75 btn-group" role="group">
-								<a class="btn btn-primary" onclick="Increase(@item.Product.Id)">
+								<a asp-action="Plus" asp-route-cartId="@item.Id" asp-controller="Cart" class="btn btn-primary">
 									<i class="bi bi-plus-square"></i>
 								</a> &nbsp;
-								<a class="btn btn-warning">
+								<a asp-action="Minus" asp-controller="Cart" asp-route-cartId="@item.Id" class="btn btn-warning">
 									<i class="bi bi-dash-square"></i>
 								</a>
 							</div>
 
 						</div>
 						<div class="col-2 col-sm-4 col-lg-2 text-right pt-2">
-							<a class="btn btn-danger" onclick=Delete(@item.Product.Id)>
+							<a asp-action="Remove" asp-controller="Cart" asp-route-cartId="@item.Id" class="btn btn-danger">
 								<i class="bi bi-trash-fill"></i>
 							</a>
 						</div>
@@ -59,7 +59,6 @@
 							</li>
 						</ul>
 					</div>
-					<strong>@item.Product.Price50</strong>
 				</div>
 
 			   }
@@ -69,7 +68,7 @@
 			<div class="card-footer">
 				<div class="card-footer row">
 					<div class="col-sm-12 col-lg-4 col-md-6 offset-lg-8 offset-md-6 ">
-						<a class="btn btn-success form-control">Summary</a>
+						<a class="btn btn-success form-control">Summary (@Model.Total.ToString("c"))</a>
 					</div>
 				</div>
 			</div>

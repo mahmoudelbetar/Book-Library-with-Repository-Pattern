@@ -13,5 +13,7 @@ namespace B_Gallery.DataAccess.Repository.IRepository
         int Increament(ShoppingCart cart, int count);
         int Decreament(ShoppingCart cart, int count);
         IEnumerable<ShoppingCart> GetAll(Expression<Func<ShoppingCart, bool>> filter, string? includeProperties = null);
+        void Update(ShoppingCart shoppingCart);
+        int CountCart();
     }
 }

@@ -20,6 +20,11 @@ namespace B_Gallery.DataAccess.Repository
             
         }
 
+        public int CountCart()
+        {
+            return _db.ShoppingCarts.Sum(c => c.Count);
+        }
+
         public int Decreament(ShoppingCart cart, int count)
         {
             return cart.Count -= count;
@@ -29,6 +34,11 @@ namespace B_Gallery.DataAccess.Repository
         public int Increament(ShoppingCart cart, int count)
         {
             return cart.Count += count;
+        }
+
+        public void Update(ShoppingCart shoppingCart)
+        {
+            _db.ShoppingCarts.Update(shoppingCart);
         }
     }
 }
