@@ -9,6 +9,6 @@ namespace B_Gallery.Models.ViewModels
     public class ShoppingCartViewModel
     {
         public IEnumerable<ShoppingCart> ListCart { get; set; }
-        public decimal Total { get; set; }
+        public OrderHeader OrderHeader { get; set; }
     }
 }

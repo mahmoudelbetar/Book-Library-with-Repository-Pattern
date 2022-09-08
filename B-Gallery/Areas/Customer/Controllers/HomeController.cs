@@ -65,6 +65,7 @@ namespace B_Gallery.Controllers
                     ListCart = _unitOfWork.ShoppingCart.GetAll()
                 };
                 HttpContext.Session.SetInt32("ccart", shoppingCartViewModel.ListCart.Sum(c => c.Count));
+                _unitOfWork.ShoppingCart.Add(shoppingCart);
                 _unitOfWork.Save();
                 return RedirectToAction("Index");
             }
