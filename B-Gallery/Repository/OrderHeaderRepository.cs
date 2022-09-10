@@ -1,5 +1,6 @@
 ﻿using B_Gallery.DataAccess.Repository.IRepository;
 using B_Gallery.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,17 @@ namespace B_Gallery.DataAccess.Repository
         {
             _db = db;
         }
+
+        public IEnumerable<OrderHeader> GetAllOrdersWithApplicationUsers()
+        {
+            return _db.OrderHeaders.Include(u => u.ApplicationUser).ToList();
+        }
+
+        public double GetTotalOrders()
+        {
+            return _db.OrderHeaders.Sum(o => o.OrderTotal);
+        }
+
         public void Save()
         {
             _db.SaveChanges();

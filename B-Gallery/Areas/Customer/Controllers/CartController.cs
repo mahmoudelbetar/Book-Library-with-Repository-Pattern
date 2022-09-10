@@ -9,7 +9,7 @@ using System.Security.Claims;
 namespace B_Gallery.Areas.Customer.Controllers
 {
     [Area("Customer")]
-    [Authorize]
+    [Authorize(Roles = "Individual")]
     public class CartController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -109,20 +109,17 @@ namespace B_Gallery.Areas.Customer.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName("Summary")]
-        public IActionResult SummaryPOST()
+        public IActionResult SummaryPOST(ShoppingCartViewModel shoppingCartViewModel)
         {
             ClaimsIdentity? claimsIdentity = (ClaimsIdentity?)User.Identity;
             Claim? claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-            ShoppingCartViewModel shoppingCartViewModel = new ShoppingCartViewModel()
+            shoppingCartViewModel.ListCart = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == claim.Value, includeProperties: "Product");
+            shoppingCartViewModel.OrderHeader = new()
             {
-                ListCart = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == claim.Value, includeProperties: "Product"),
-                OrderHeader = new OrderHeader()
-                {
-                    ApplicationUserId = claim.Value,
-                    PaymentStatus = SD.PaymentStatusPending,
-                    OrderStatus = SD.StatusPending,
-                    OrderDate = DateTime.Now
-                }
+                ApplicationUserId = claim.Value,
+                PaymentStatus = SD.PaymentStatusPending,
+                OrderStatus = SD.StatusPending,
+                OrderDate = DateTime.Now
             };
 
             var total = shoppingCartViewModel.OrderHeader.OrderTotal;
@@ -151,7 +148,7 @@ namespace B_Gallery.Areas.Customer.Controllers
 
             _unitOfWork.ShoppingCart.RemoveRange(shoppingCartViewModel.ListCart);
             _unitOfWork.Save();
-
+            TempData["OrderSuccess"] = "Order Placed Successfully!";
             return RedirectToAction("Index", "Home");
         }
     }

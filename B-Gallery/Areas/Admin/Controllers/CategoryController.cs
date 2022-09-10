@@ -1,11 +1,13 @@
 ﻿using B_Gallery.DataAccess;
 using B_Gallery.DataAccess.Repository.IRepository;
 using B_Gallery.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace B_Gallery.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class CategoryController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

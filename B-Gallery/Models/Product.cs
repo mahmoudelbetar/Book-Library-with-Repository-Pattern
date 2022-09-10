@@ -20,11 +20,6 @@ namespace B_Gallery.Models
 
         public string Description { get; set; }
 
-        [Required]
-        public int ISBN { get; set; }
-
-        [Required]
-        public string Author { get; set; }
 
         [Required]
         [Range(1, 10000)]
@@ -61,8 +56,6 @@ namespace B_Gallery.Models
         [DisplayName("Cover Type")]
         public int CoverTypeId { get; set; }
 
-        [ForeignKey("CoverTypeId")]
-        [ValidateNever]
-        public CoverType CoverType { get; set; }
+        
     }
 }

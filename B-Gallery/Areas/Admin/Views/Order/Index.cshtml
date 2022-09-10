@@ -1,0 +1,64 @@
+﻿
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="container p-3">
+    <div class="row pt-4">
+        
+        <div class="col-6">
+            <h1 class="text-primary">Order List</h1>
+            
+        </div>
+        <div class="col-6">
+            <ul class="list-group shadow-none list-group-horizontal-sm justify-content-end">
+                <a style="text-decoration:none;" asp-action="Index" asp-controller="Order" asp-route-status="inprocess">
+                    <li class="list-group-item">
+                        InProcess
+                    </li>
+                </a>
+                <a style="text-decoration:none;" asp-action="Index" asp-controller="Order" asp-route-status="pending">
+                    <li class="list-group-item">
+                        Pending
+                    </li>
+                </a>
+                <a style="text-decoration:none;" asp-action="Index" asp-controller="Order" asp-route-status="completed">
+                    <li class="list-group-item">
+                        Completed
+                    </li>
+                </a>
+                <a style="text-decoration:none;" asp-action="Index" asp-controller="Order" asp-route-status="all">
+                    <li class="list-group-item">
+                        All
+                    </li>
+                </a>
+            </ul>
+        </div>
+        @*<div class="col-6 text-end">
+            <a asp-controller="Order" asp-action="Upsert" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Create New Product
+            </a>
+        </div>*@
+    </div>
+    <br /> <br />
+
+<table id="tblData" class="table table-bordered table-striped" width="100%">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Total</th>
+            <th></th>
+        </tr>
+    </thead>
+</table>
+
+</div>
+
+@section Scripts{
+    <script src="~/js/order.js"></script>
+}
