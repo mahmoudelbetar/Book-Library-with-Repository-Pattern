@@ -147,12 +147,8 @@ namespace B_Gallery.Areas.Identity.Pages.Account
                 {
                     Text = r,
                     Value = r
-                }),
-                CompanyList = _db.Companies.Select(c => c.Name).Select(c => new SelectListItem()
-                {
-                    Text = c,
-                    Value = c
                 })
+               
             };
         }
 
@@ -218,12 +214,8 @@ namespace B_Gallery.Areas.Identity.Pages.Account
                     {
                         Text = r,
                         Value = r
-                    }),
-                    CompanyList = _db.Companies.Select(c => c.Name).Select(c => new SelectListItem()
-                    {
-                        Text = c,
-                        Value = c
                     })
+                    
                 };
                 foreach (var error in result.Errors)
                 {

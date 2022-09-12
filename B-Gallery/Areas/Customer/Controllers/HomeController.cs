@@ -13,16 +13,19 @@ namespace B_Gallery.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IHttpContextAccessor _http;
 
-        public HomeController(ILogger<HomeController> logger, IUnitOfWork unitOfWork)
+        public HomeController(ILogger<HomeController> logger, IUnitOfWork unitOfWork, IHttpContextAccessor Http)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
+            _http = Http;
         }
 
         public IActionResult Index()
         {
             IEnumerable<Product> products = _unitOfWork.Product.GetAll(includePropertis:"Category,CoverType");
+            HttpContext.Session.SetInt32("ccart", _unitOfWork.ShoppingCart.CountCart());
             return View(products);
         }
 
@@ -57,6 +60,12 @@ namespace B_Gallery.Controllers
                 {
                     cartFromDb.Count = shoppingCart.Count;
                 }
+                var shoppingCartViewModel = new ShoppingCartViewModel()
+                {
+                    ListCart = _unitOfWork.ShoppingCart.GetAll()
+                };
+                HttpContext.Session.SetInt32("ccart", shoppingCartViewModel.ListCart.Sum(c => c.Count));
+                _unitOfWork.ShoppingCart.Add(shoppingCart);
                 _unitOfWork.Save();
                 return RedirectToAction("Index");
             }

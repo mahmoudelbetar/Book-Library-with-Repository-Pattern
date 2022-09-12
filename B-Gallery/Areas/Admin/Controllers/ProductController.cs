@@ -1,12 +1,14 @@
 ﻿using B_Gallery.DataAccess.Repository.IRepository;
 using B_Gallery.Models;
 using B_Gallery.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace B_Gallery.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class ProductController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -53,11 +55,7 @@ namespace B_Gallery.Controllers
                     Text = u.Name,
                     Value = u.Id.ToString()
                 }),
-                CoverTypeList = _unitOfWork.CoverType.GetAll().Select(u => new SelectListItem
-                {
-                    Text = u.Name,
-                    Value = u.Id.ToString()
-                })
+                
             };
 
             if (id == null || id == 0)

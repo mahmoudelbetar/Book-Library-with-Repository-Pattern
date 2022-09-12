@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 let datatables;
+=======
+﻿let datatables;
+>>>>>>> b4b934b9f290acebc752b2eb3fce66291b671c19
 
 $(document).ready(function () {
     loadDataTable();
