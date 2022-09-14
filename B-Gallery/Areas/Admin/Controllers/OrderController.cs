@@ -1,6 +1,7 @@
 ﻿using B_Gallery.DataAccess.Repository.IRepository;
 using B_Gallery.Models;
 using B_Gallery.Models.ViewModels;
+using B_Gallery.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,23 +17,34 @@ namespace B_Gallery.Areas.Admin.Controllers
         {
             _unitOfWork = unitOfWork;
         }
-        public IActionResult Index(string? status)
+        public IActionResult Index()
         {
-            GetAll(status);
             return View();
         }
 
         [HttpGet]
-        public IActionResult GetAll(string? status)
+        public IActionResult GetAll(string status)
         {
             IEnumerable<OrderHeader> orderHeaders;
-            if (status != "all")
+
+            switch (status)
             {
-                orderHeaders = _unitOfWork.OrderHeader.GetAll(u => u.OrderStatus.ToLower() == status, includePropertis: "ApplicationUser");
-                return Json(new { data = orderHeaders });
+                case "pending":
+                    orderHeaders = _unitOfWork.OrderHeader.GetAll(u => u.OrderStatus == SD.PaymentStatusPending, includePropertis: "ApplicationUser");
+                    break;
+                case "inprocess":
+                    orderHeaders = _unitOfWork.OrderHeader.GetAll(u => u.OrderStatus == SD.StatusInProcess, includePropertis: "ApplicationUser");
+                    break;
+                case "completed":
+                    orderHeaders = _unitOfWork.OrderHeader.GetAll(u => u.OrderStatus == SD.StatusShipped, includePropertis: "ApplicationUser");
+                    break;
+                default:
+                    orderHeaders = _unitOfWork.OrderHeader.GetAll(includePropertis: "ApplicationUser");
+                    break;
             }
-            orderHeaders = _unitOfWork.OrderHeader.GetAll(includePropertis: "ApplicationUser");
+
             return Json(new { data = orderHeaders });
+
         }
     }
 }

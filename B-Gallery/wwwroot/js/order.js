@@ -1,22 +1,36 @@
-<<<<<<< HEAD
-let datatables;
-=======
+﻿
 ﻿let datatables;
->>>>>>> b4b934b9f290acebc752b2eb3fce66291b671c19
+
 
 $(document).ready(function () {
-    loadDataTable();
+    var url = window.location.search;
+    var stat = url.split("=");
+    stat = stat[1];
+    switch (stat) {
+        case "pending":
+            loadDataTable("pending");
+            break;
+        case "inprocess":
+            loadDataTable("inprocess");
+            break;
+        case "completed":
+            loadDataTable("completed");
+            break;
+        default:
+            loadDataTable("all");
+    }
+    
 });
 
-function loadDataTable() {
+function loadDataTable(status) {
     datatables = $('#tblData').DataTable({
         "ajax": {
-            "url": "/Admin/Order/GetAll"
+            "url": `/Admin/Order/GetAll?${status}`
         },
         "columns": [
-            { "data" : "id", "width" : "15%"},
-            { "data": "name", "width": "15%"},
-            { "data": "phoneNumber", "width": "15%"},
+            { "data": "id", "width": "15%" },
+            { "data": "name", "width": "15%" },
+            { "data": "phoneNumber", "width": "15%" },
             { "data": "applicationUser.email", "width": "15%" },
             { "data": "orderStatus", "width": "15%" },
             { "data": "orderTotal", "width": "15%" },

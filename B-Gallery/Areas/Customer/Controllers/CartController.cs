@@ -119,7 +119,13 @@ namespace B_Gallery.Areas.Customer.Controllers
                 ApplicationUserId = claim.Value,
                 PaymentStatus = SD.PaymentStatusPending,
                 OrderStatus = SD.StatusPending,
-                OrderDate = DateTime.Now
+                OrderDate = DateTime.Now,
+                City = shoppingCartViewModel.OrderHeader.City,
+                State = shoppingCartViewModel.OrderHeader.State,
+                PostalCode = shoppingCartViewModel.OrderHeader.PostalCode,
+                Name = shoppingCartViewModel.OrderHeader.Name,
+                PhoneNumber = shoppingCartViewModel.OrderHeader.PhoneNumber,
+                StreetAddress = shoppingCartViewModel.OrderHeader.StreetAddress
             };
 
             var total = shoppingCartViewModel.OrderHeader.OrderTotal;

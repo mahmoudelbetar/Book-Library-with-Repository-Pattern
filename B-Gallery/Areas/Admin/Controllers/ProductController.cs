@@ -123,7 +123,7 @@ namespace B_Gallery.Controllers
         [HttpGet]
         public IActionResult GetDataTable()
         {
-            var productList = _unitOfWork.Product.GetAll(includePropertis:"Category,CoverType");
+            var productList = _unitOfWork.Product.GetAll(includePropertis:"Category");
             return Json(new { data = productList });
         }
         // POST - Delete

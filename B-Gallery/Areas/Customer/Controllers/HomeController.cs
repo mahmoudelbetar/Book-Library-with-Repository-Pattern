@@ -24,9 +24,36 @@ namespace B_Gallery.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<Product> products = _unitOfWork.Product.GetAll(includePropertis:"Category,CoverType");
+            IEnumerable<Product> products = _unitOfWork.Product.GetAll(includePropertis: "Category");
             HttpContext.Session.SetInt32("ccart", _unitOfWork.ShoppingCart.CountCart());
             return View(products);
+
+        }
+
+        [HttpGet]
+        public IActionResult Filter(string? category = null)
+        {
+            if (category != null)
+            {
+                if (category != "All")
+                {
+                    IEnumerable<Product> filteredProdcts = _unitOfWork.Product.FilterProductByCategory(category);
+                    HttpContext.Session.SetInt32("ccart", _unitOfWork.ShoppingCart.CountCart());
+                    return View("Index", filteredProdcts);
+                }
+                else
+                {
+                    IEnumerable<Product> products = _unitOfWork.Product.GetAll(includePropertis: "Category");
+                    HttpContext.Session.SetInt32("ccart", _unitOfWork.ShoppingCart.CountCart());
+                    return View("Index", products);
+                }
+            }
+            else
+            {
+                IEnumerable<Product> products = _unitOfWork.Product.GetAll(includePropertis: "Category");
+                HttpContext.Session.SetInt32("ccart", _unitOfWork.ShoppingCart.CountCart());
+                return View("Index", products);
+            }
         }
 
         public IActionResult Details(int productId)
@@ -35,7 +62,7 @@ namespace B_Gallery.Controllers
             {
                 Count = 1,
                 ProductId = productId,
-                Product = _unitOfWork.Product.GetFirstOrDefault(p => p.Id == productId, includePropertis: "Category,CoverType")
+                Product = _unitOfWork.Product.GetFirstOrDefault(p => p.Id == productId, includePropertis: "Category")
             };
             return View(cartObj);
         }

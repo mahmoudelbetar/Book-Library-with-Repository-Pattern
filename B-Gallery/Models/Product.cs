@@ -52,9 +52,7 @@ namespace B_Gallery.Models
         [ValidateNever]
         public Category Category { get; set; }
 
-        [Required]
-        [DisplayName("Cover Type")]
-        public int CoverTypeId { get; set; }
+        
 
         
     }

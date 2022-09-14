@@ -16,6 +16,12 @@ namespace B_Gallery.DataAccess.Repository
         {
             _db = db;
         }
+
+        public IEnumerable<Product> FilterProductByCategory(string? category = null)
+        {
+            return _db.Products.Where(p => p.Category.Name == category).ToList();
+        }
+
         public void Save()
         {
             _db.SaveChanges();
