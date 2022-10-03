@@ -14,5 +14,6 @@ namespace B_Gallery.DataAccess.Repository.IRepository
         double GetTotalOrders();
         IEnumerable<OrderHeader> GetAllOrdersWithApplicationUsers();
         void Save();
+        void UpdateStripePaymentID(int id, string? sessionId, string? paymentIntentId);
     }
 }

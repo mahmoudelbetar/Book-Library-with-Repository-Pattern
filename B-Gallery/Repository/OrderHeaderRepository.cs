@@ -38,7 +38,13 @@ namespace B_Gallery.DataAccess.Repository
             _db.OrderHeaders.Update(orderHeader);
         }
 
-       
+        public void UpdateStripePaymentID(int id, string? sessionId, string? paymentIntentId)
+        {
+            var orderFromDb = _db.OrderHeaders.FirstOrDefault(o => o.Id == id);
+            orderFromDb.SessionId = sessionId;
+            orderFromDb.PaymentIntentId = paymentIntentId;
+        }
+
         public void UpdateStatus(int id, string orderStatus, string? paymentStatus = null)
         {
             var orderFromDb = _db.OrderHeaders.FirstOrDefault(o => o.Id == id);

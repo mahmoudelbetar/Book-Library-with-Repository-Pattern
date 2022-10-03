@@ -112,3 +112,7 @@
 
 
 
+select Count(*)
+
+
+orderCost+((totalWeight-10)*5)+5

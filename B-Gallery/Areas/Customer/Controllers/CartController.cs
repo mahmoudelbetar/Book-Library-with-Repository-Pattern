@@ -4,6 +4,7 @@ using B_Gallery.Models.ViewModels;
 using B_Gallery.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Stripe.Checkout;
 using System.Security.Claims;
 
 namespace B_Gallery.Areas.Customer.Controllers
@@ -152,10 +153,59 @@ namespace B_Gallery.Areas.Customer.Controllers
                 _unitOfWork.Save();
             }
 
-            _unitOfWork.ShoppingCart.RemoveRange(shoppingCartViewModel.ListCart);
+            var domain = "https://localhost:44363/";
+            var options = new SessionCreateOptions
+            {
+                LineItems = new List<SessionLineItemOptions>(),
+                Mode = "payment",
+                SuccessUrl = domain+$"Customer/Cart/OrderConfirmation?id={shoppingCartViewModel.OrderHeader.Id}",
+                CancelUrl = domain+$"Customer/Home/Index",
+            };
+
+            foreach(var item in shoppingCartViewModel.ListCart)
+            {
+                var sessionLineItem = new SessionLineItemOptions
+                {
+                    PriceData = new SessionLineItemPriceDataOptions
+                    {
+                        UnitAmount = (long)(item.Product.Price*100),
+                        Currency = "usd",
+                        ProductData = new SessionLineItemPriceDataProductDataOptions
+                        {
+                            Name = item.Product.Title,
+                        },
+
+                    },
+                    Quantity = item.Count,
+                };
+                options.LineItems.Add(sessionLineItem);
+            }
+
+            
+
+            var service = new SessionService();
+            Session session = service.Create(options);
+
+            _unitOfWork.OrderHeader.UpdateStripePaymentID(shoppingCartViewModel.OrderHeader.Id, session.Id, session.PaymentIntentId);
+
             _unitOfWork.Save();
-            TempData["OrderSuccess"] = "Order Placed Successfully!";
-            return RedirectToAction("Index", "Home");
+
+            Response.Headers.Add("Location", session.Url);
+            return new StatusCodeResult(303);
+
+
+
+            //_unitOfWork.ShoppingCart.RemoveRange(shoppingCartViewModel.ListCart);
+            //_unitOfWork.Save();
+            //TempData["OrderSuccess"] = "Order Placed Successfully!";
+            //return RedirectToAction("Index", "Home");
         }
+
+        //public IActionResult OrderConfirmation(int id)
+        //{
+        //    var orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(o => o.Id == id);
+
+        //    //check stripe status
+        //}
     }
 }

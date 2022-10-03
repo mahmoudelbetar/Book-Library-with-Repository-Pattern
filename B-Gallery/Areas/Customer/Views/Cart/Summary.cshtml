@@ -1,4 +1,9 @@
 ﻿@model ShoppingCartViewModel
+@using B_Gallery.Utility
+@using Microsoft.Extensions.Options
+@inject IOptions<StripeSettings> Stripe
+
+
 <form method="post" asp-action="Summary">
 	<br />
 	<div class="container">

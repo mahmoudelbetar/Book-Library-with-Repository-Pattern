@@ -3,6 +3,7 @@ using B_Gallery.Models;
 using B_Gallery.Models.ViewModels;
 using B_Gallery.Utility;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace B_Gallery.Areas.Admin.Controllers
@@ -12,14 +13,29 @@ namespace B_Gallery.Areas.Admin.Controllers
     public class OrderController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+       
+
+        [BindProperty]
+        public OrderViewModel OrderViewModel { get; set; }
 
         public OrderController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
+           
         }
         public IActionResult Index()
         {
             return View();
+        }
+
+        public IActionResult Details(int orderId)
+        {
+            OrderViewModel = new OrderViewModel()
+            {
+                OrderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == orderId, includePropertis: "ApplicationUser"),
+                OrderDetails = _unitOfWork.OrderDetail.GetAll(u => u.OrderId == orderId, includePropertis: "Product")
+            };
+            return View(OrderViewModel);
         }
 
         [HttpGet]
